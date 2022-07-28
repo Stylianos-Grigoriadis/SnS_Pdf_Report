@@ -105,7 +105,9 @@ Jumps_table = [['Elastic index','',':',  '10'],
         ['', '','','', ''],
         ['Use of arms','',':', '10'],
         ['', '', ''],
-        ['Reflective Power index','',':', '10']
+        ['Reflective Power index','',':', '10'],
+        ['', '', ''],
+        ['YoYo test score', '',':','14']
         ]
 
 th = pdf.font_size
@@ -116,7 +118,7 @@ for row in Jumps_table:
         # Notice the use of the function str to coerce any input to the
         # string type. This is needed
         # since pyFPDF expects a string, not a number.
-        pdf.cell(width/7,1.5* th, str(datu), border=0)
+        pdf.cell(width/7,th, str(datu), border=0)
 
     pdf.ln(1.5*th)
 print(pdf.x)
@@ -128,27 +130,29 @@ print(pdf.y)
 print(pdf.x)
 
 
-data = {'Squat': 20, 'Counter-Movement': 25, 'Counter-Movement with Hands': 30,
-        'Drop': 22}
+data = {'Squat Jump': 20, 'Counter-Movement\nJump        ': 25, 'Counter-Movement\nJump with Hands': 30,
+        'Drop Jump': 22}
 courses = list(data.keys())
 values = list(data.values())
 
-fig = plt.figure(figsize=(10, 5))
+fig = plt.figure(figsize=(10, 7))
 
 # creating the bar plot
 plt.bar(courses, values, color='maroon',
         width=0.4)
 y = list(range(1, 50, 5))
-plt.xlabel("Jumps")
-plt.ylabel("Height (cm)")
-plt.title("Max Height in different Jumps")
+
+plt.ylabel("Height (cm)",fontsize=20)
+plt.title("Maximum Height in different Jumps",fontsize=30)
 plt.yticks(fontsize=20)
+plt.xticks(fontsize=20, rotation=45,ha='right')
+plt.tight_layout()
 plt.savefig("plot.png")
-plt.show()
+# plt.show()
 
 
 
-pdf.image("plot.png",x = pdf.x -20, y = pdf.y, w = 100, h = 40, type = 'PNG', link = '')
+pdf.image("plot.png",x = pdf.x -20, y = pdf.y, w = 100, h = 60, type = 'PNG', link = '')
 
 
 
