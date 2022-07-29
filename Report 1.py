@@ -176,75 +176,75 @@ pdf.cell(6,1, 'R = 20', 0,1,'L')
 # pdf.cell(h = pdf.y , txt ="R = 20")
 
 
-#Start the writting of jumps and Yoyo test
-# pdf.set_font('Arial', 'BUI', 26)
-# pdf.cell(0, 15, 'Jumps and YoYo test', 0,1,'L')
-# pdf.cell(0, 5, '', 0,1,'C')
-#
-# top = pdf.y
-#
-# pdf.set_font('Arial', '', 16)
-# Jumps_table = [['Elastic index','',':',  '10'],
-#         ['', '','','', ''],
-#         ['Use of arms','',':', '10'],
-#         ['', '', ''],
-#         ['Reflective Power index','',':', '10'],
-#         ['', '', ''],
-#         ['YoYo test score', '',':','14']
-#         ]
-#
-# th = pdf.font_size
-#
-# for row in Jumps_table:
-#     for datu in row:
-#         # Enter data in colums
-#         # Notice the use of the function str to coerce any input to the
-#         # string type. This is needed
-#         # since pyFPDF expects a string, not a number.
-#         pdf.cell(width/7,th, str(datu), border=0)
-#
-#     pdf.ln(1.5*th)
-# print(pdf.x)
-# offset = pdf.x + 120
-# pdf.x = offset
-# print(pdf.y)
-# pdf.y = top
-# print(pdf.y)
-# print(pdf.x)
-#
-#
-# data = {'Squat Jump': 20, 'Counter-Movement\nJump        ': 25, 'Counter-Movement\nJump with Hands': 30,
-#         'Drop Jump': 22}
-# courses = list(data.keys())
-# values = list(data.values())
-#
-# fig = plt.figure(figsize=(10, 7))
-#
-# # creating the bar plot
-# plt.bar(courses, values, color='maroon',
-#         width=0.4)
-# y = list(range(1, 50, 5))
-#
-# plt.ylabel("Height (cm)",fontsize=20)
-# plt.title("Maximum Height in different Jumps",fontsize=30)
-# plt.yticks(fontsize=20)
-# plt.xticks(fontsize=20, rotation=45,ha='right')
-# plt.tight_layout()
-# plt.savefig("plot.png")
-# # plt.show()
-#
-#
-#
-# pdf.image("plot.png",x = pdf.x -20, y = pdf.y, w = 100, h = 60, type = 'PNG', link = '')
-#
-#
-#
-#
-#
-#
-#
-#
-#
+# Start the writting of jumps and Yoyo test
+pdf.set_font('Arial', 'BUI', 26)
+pdf.cell(0, 15, 'Jumps and YoYo test', 0,1,'L')
+pdf.cell(0, 5, '', 0,1,'C')
+
+top = pdf.y
+
+pdf.set_font('Arial', '', 16)
+Jumps_table = [['Elastic index','',':',  '10'],
+        ['', '','','', ''],
+        ['Use of arms','',':', '10'],
+        ['', '', ''],
+        ['Reflective Power index','',':', '10'],
+        ['', '', ''],
+        ['YoYo test score', '',':','14']
+        ]
+
+th = pdf.font_size
+
+for row in Jumps_table:
+    for datu in row:
+        # Enter data in colums
+        # Notice the use of the function str to coerce any input to the
+        # string type. This is needed
+        # since pyFPDF expects a string, not a number.
+        pdf.cell(width/7,th, str(datu), border=0)
+
+    pdf.ln(1.5*th)
+print(pdf.x)
+offset = pdf.x + 120
+pdf.x = offset
+print(pdf.y)
+pdf.y = top
+print(pdf.y)
+print(pdf.x)
+
+
+data = {'Squat Jump': 20, 'Counter-Movement\nJump        ': 25, 'Counter-Movement\nJump with Hands': 30,
+        'Drop Jump': 22}
+courses = list(data.keys())
+values = list(data.values())
+
+fig = plt.figure(figsize=(10, 7))
+
+# creating the bar plot
+plt.bar(courses, values, color='maroon',
+        width=0.4)
+y = list(range(1, 50, 5))
+
+plt.ylabel("Height (cm)",fontsize=20)
+plt.title("Maximum Height in different Jumps",fontsize=30)
+plt.yticks(fontsize=20)
+plt.xticks(fontsize=20, rotation=45,ha='right')
+plt.tight_layout()
+plt.savefig("plot.png")
+# plt.show()
+
+
+
+pdf.image("plot.png",x = pdf.x -20, y = pdf.y, w = 100, h = 60, type = 'PNG', link = '')
+
+
+
+
+
+
+
+
+
 
 pdf.output('Report_1.pdf', 'F')
 webbrowser.open_new('Report_1.pdf')
