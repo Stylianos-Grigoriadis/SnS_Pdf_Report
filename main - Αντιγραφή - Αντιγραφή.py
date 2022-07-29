@@ -53,6 +53,7 @@ def Spider_plot(dataL, dataR, DaL,DaR, Number_of_Variables_PLotted, Joint):
     plt.legend(loc='upper left', bbox_to_anchor=(0.8, 1.10),
           ncol=1, fancybox=True, shadow=True, prop={'size': 14})
     plt.tight_layout()
+    plt.savefig("a")
     plt.show()
 
 #Call it for the hip
