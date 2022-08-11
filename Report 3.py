@@ -61,7 +61,23 @@ def Spider_plot(dataL, dataR, DaL,DaR, Number_of_Variables_PLotted, Joint):
         ncol=1, fancybox=True, shadow=True, prop={'size': 14})
     plt.tight_layout()
     plt.savefig("plot_" + Joint + ".png")
+
+    # Resizing image
+
+    image_hip = Image.open(r"plot_" + Joint + ".png")
+    width, height = image_hip.size
+
+    # Setting the points for cropped image
+    left = 162
+    top = 1
+    right = 738
+    bottom = height
+
+    im1 = image_hip.crop((left, top, right, bottom))
+
+    #im1.show()
     # plt.show()
+    im1.save("plot_" + Joint + "_after_resizing.png")
 def Muscle_labels(x_coordinate, y_coordinate, Muscle_name, Left_strength, Right_strength):
     pdf.set_font('Arial', '', 6)
     th = pdf.font_size
@@ -81,13 +97,11 @@ def Muscle_labels(x_coordinate, y_coordinate, Muscle_name, Left_strength, Right_
             print(pdf.x)
         pdf.ln(th)
         pdf.x = pdf.x + x_coordinate
-#Insert the excel with all the info
 
-df = pd.read_excel (r'C:\Stavros & Stylian Corporation\Μετρησείς\Mylonas_Vasilis.xlsx')
-#print(df)
-#print(df.columns)
-#print(df[1][1])
 
+# Insert the excel with all the info
+
+df = pd.read_excel(r'C:\Stavros & Stylian Corporation\Μετρησείς\Mylonas_Vasilis.xlsx')
 
 width = 210
 height = 297
@@ -95,11 +109,9 @@ height = 297
 pdf = FPDF()
 pdf.add_page()
 
-
 pdf.set_font('Arial', 'B', 26)
-pdf.cell(0, 15, 'Athletic Report', 1,1,'C')
+pdf.cell(0, 15, 'Athletic Repsort', 1,1,'C')
 pdf.cell(0, 5, '', 0,1,'C')
-
 
 pdf.set_font('Arial', '', 16)
 
@@ -109,6 +121,7 @@ Charactiristics_table = [['Name', ':', str(df[2][0]), '', 'Age', ':', str(df[2][
                 ['Height', ':', str(df[2][3]), '', 'Injury', '=>', ''],
                 ['Weight', ':', str(df[2][4]), '', str(df[2][8]), '', '']
                 ]
+
 pdf.set_font('Arial', '', 14)
 list_for_alingnment_in_charactiristics_table = ['L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L',]
 th = pdf.font_size
@@ -124,11 +137,10 @@ for row in Charactiristics_table:
 
 pdf.cell(0, 5, '', 0,1,'C')
 pdf.cell(0, 5, '', 0,1,'C')
+
 #Start the writting of Force and RoM
 pdf.set_font('Arial', 'BUI', 18)
-pdf.cell(0, 15, 'Force and Range of Motion', 0,1,'L')
-#pdf.cell(0, 5, '', 0,1,'C')
-
+pdf.cell(0, 15, 'Force Test', 0,1,'L')
 
 #Call Spider_plot for the hip
 
@@ -149,12 +161,23 @@ Spider_plot(L_perc,R_perc,Data_to_annotate_L,Data_to_annotate_R,4,'Hip')
 #save the y, x so that you can use it after to place the other diagrams
 save_x = pdf.x
 save_y = pdf.y
+# #Resizing image
+#
+# image_hip = Image.open(r"plot_Hip.png")
+# width, height = image_hip.size
+#
+# # Setting the points for cropped image
+# left = 88
+# top = 1
+# right = 800
+# bottom = height
+#
+# im1 = image_hip.crop((left, top, right, bottom))
+#
+# im1.show()
 
-pdf.image("plot_Hip.png",x = pdf.x -26, y = pdf.y,  w = 90, h = 67.5, type = 'PNG', link = '')
+pdf.image("plot_Hip_after_resizing.png",x = pdf.x , y = pdf.y,  w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
-
-
-
 
 #Call Spider_plot for the knee
 #R/L = [Knee Ex, Knee Fl, Knee Fl/ Knee Ex]
@@ -170,18 +193,11 @@ pdf.y = save_y
 #print(pdf.y)
 pdf.x = save_x + 80
 
-pdf.image("plot_Knee.png",x = pdf.x -32, y = pdf.y,  w = 90, h = 67.5, type = 'PNG', link = '')
+pdf.image("plot_Knee_after_resizing.png",x = pdf.x -13, y = pdf.y,  w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
 
-
-
-#save the y, x so that you can use it after to place the other diagrams
-
-
-#print(pdf.x)
-#print(pdf.y)
 #Call Spider_plot for the ankle
-#R/L = [Ankle D, nkle P, Ankle In, Ankle Ev]
+#R/L = [Ankle D, Ankle P, Ankle In, Ankle Ev]
 R = [df[3][16], df[3][17], df[3][18], df[3][19]]
 L = [df[2][16], df[2][17], df[2][18], df[2][19]]
 R_perc = [r/(l+r)*100 for r,l in zip(R,L)]
@@ -190,19 +206,13 @@ Data_to_annotate_L= L
 Data_to_annotate_R= R
 Spider_plot(L_perc,R_perc,Data_to_annotate_L,Data_to_annotate_R,4,'Ankle')
 
-
-#print(pdf.y)
 pdf.x = save_x + 160
 pdf.y = save_y
-pdf.image("plot_Ankle.png",x = pdf.x -38, y = pdf.y , w = 90, h = 67.5, type = 'PNG', link = '')
+pdf.image("plot_Ankle_after_resizing.png",x = pdf.x -25, y = pdf.y , w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
 
 pdf.x = save_x
-#print(pdf.y)
-#print(pdf.x)
-
 pdf.y = save_y + 65
-# Start the writting of jumps and Yoyo test
 
 pdf.set_font('Arial', 'BUI', 18)
 pdf.cell(0, 15, 'Jumps and YoYo test', 0,1,'L')
@@ -217,8 +227,8 @@ Jumps_table = [['Elastic index','',':',  '10'],
         ['', '', ''],
         ['YoYo test score', '',':','14']
         ]
+
 save_y = pdf.y
-#print(pdf.y)
 th = pdf.font_size
 
 for row in Jumps_table:
@@ -230,11 +240,8 @@ for row in Jumps_table:
         pdf.cell(width/7,th, str(datu), border=0)
     pdf.ln(1.5*th)
 
-#print(pdf.x)
-#print(pdf.y)
 save_y_2 = pdf.y
 pdf.y = save_y
-#print(pdf.y)
 save_x_2 = pdf.x
 pdf.x = pdf.x +100
 
@@ -262,9 +269,8 @@ plt.savefig("plot.png")
 
 pdf.image("plot.png",x = pdf.x , y = pdf.y, w = 100, h = 60, type = 'PNG', link = '')
 
-#print(pdf.y)
-#print(pdf.x)
 pdf.cell(0, 5, '', 0,1,'C')
+
 #Physical Observation
 
 pdf.y = save_y_2
@@ -274,29 +280,6 @@ pdf.set_font('Arial', 'BUI', 18)
 pdf.cell(0, 15, 'Physical Observation', 0,1,'L')
 pdf.cell(0, 5, '', 0,1,'C')
 
-#writing of the labels of the muscles in the circled boxplots
-# pdf.x = pdf.x + 10
-# pdf.y = pdf.y - 175
-# L_hip_ext = 10
-# R_hip_ext = 12
-# Hip_Extension_table = [['Hip Extension'],
-#                 ['L = ' + str(L_hip_ext) + 'kg'],
-#                 ['R = ' + str(R_hip_ext) + 'kg']
-#                 ]
-# pdf.set_font('Arial', '', 8)
-# #list_for_alingnment_in_charactiristics_table = ['L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L',]
-# th = pdf.font_size
-#
-# for row in Hip_Extension_table:
-#     for datum in row:
-#         # Enter data in colums
-#         # Notice the use of the function str to coerce any input to the
-#         # string type. This is needed
-#         # since pyFPDF expects a string, not a number.
-#         pdf.cell(width/8,1.5 * 14, str(datum), border= 0, align = 'L')
-#     pdf.ln(th)
-#     pdf.x = pdf.x + 10
-#print('ok')
 pdfy3 = pdf.y
 pdfx3 = pdf.x
 #Muscle_labels(x_coordinate,y_coordinate,Muscle_name,Left_strength,Right_strength)
@@ -325,8 +308,6 @@ Muscle_labels(75,-165,'Extension',df[2][10],df[3][10])
 
 
 
-pdf.output('Report_2.pdf', 'F')
-webbrowser.open_new('Report_2.pdf')
 
 
 
@@ -334,48 +315,5 @@ webbrowser.open_new('Report_2.pdf')
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+pdf.output('Report_3.pdf', 'F')
+webbrowser.open_new('Report_3.pdf')

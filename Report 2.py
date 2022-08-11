@@ -97,7 +97,7 @@ pdf.add_page()
 
 
 pdf.set_font('Arial', 'B', 26)
-pdf.cell(0, 15, 'Athletic Report', 1,1,'C')
+pdf.cell(0, 15, 'Athletic Repsort', 1,1,'C')
 pdf.cell(0, 5, '', 0,1,'C')
 
 
