@@ -101,7 +101,7 @@ def Muscle_labels(x_coordinate, y_coordinate, Muscle_name, Left_strength, Right_
 
 # Insert the excel with all the info
 
-df = pd.read_excel(r'C:\Stavros & Stylian Corporation\Μετρησείς\Mylonas_Vasilis.xlsx')
+df = pd.read_excel(r'D:\Stavros & Stylian Corporation\Μετρησείς\Mylonas_Vasilis.xlsx')
 
 width = 210
 height = 297
@@ -156,25 +156,10 @@ Data_to_annotate_R= R
 Spider_plot(L_perc,R_perc,Data_to_annotate_L,Data_to_annotate_R,4,'Hip')
 
 
-#print(pdf.x)
-#print(pdf.y)
-#save the y, x so that you can use it after to place the other diagrams
+
 save_x = pdf.x
 save_y = pdf.y
-# #Resizing image
-#
-# image_hip = Image.open(r"plot_Hip.png")
-# width, height = image_hip.size
-#
-# # Setting the points for cropped image
-# left = 88
-# top = 1
-# right = 800
-# bottom = height
-#
-# im1 = image_hip.crop((left, top, right, bottom))
-#
-# im1.show()
+
 
 pdf.image("plot_Hip_after_resizing.png",x = pdf.x , y = pdf.y,  w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
@@ -283,7 +268,12 @@ pdf.cell(0, 5, '', 0,1,'C')
 pdfy3 = pdf.y
 pdfx3 = pdf.x
 #Muscle_labels(x_coordinate,y_coordinate,Muscle_name,Left_strength,Right_strength)
-Muscle_labels(12,-166,'Extension',df[2][12],df[3][12])
+#Hip Labels
+Muscle_label_Hip_Ex(12,-166,'Extension',df[2][12],df[3][12])
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_label_Hip_Fl(12,-166,'Extension',df[2][12],df[3][12])
+
 pdf.y = pdfy3
 pdf.x = pdfx3
 Muscle_labels(75,-165,'Extension',df[2][10],df[3][10])

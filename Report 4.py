@@ -61,33 +61,49 @@ def Spider_plot(dataL, dataR, DaL,DaR, Number_of_Variables_PLotted, Joint):
         ncol=1, fancybox=True, shadow=True, prop={'size': 14})
     plt.tight_layout()
     plt.savefig("plot_" + Joint + ".png")
+
+    # Resizing image
+
+    image_hip = Image.open(r"plot_" + Joint + ".png")
+    width, height = image_hip.size
+
+    # Setting the points for cropped image
+    left = 162
+    top = 1
+    right = 738
+    bottom = height
+
+    im1 = image_hip.crop((left, top, right, bottom))
+
+    #im1.show()
     # plt.show()
+    im1.save("plot_" + Joint + "_after_resizing.png")
 def Muscle_labels(x_coordinate, y_coordinate, Muscle_name, Left_strength, Right_strength):
     pdf.set_font('Arial', '', 6)
     th = pdf.font_size
-    pdf.x = pdf.x + x_coordinate
-    pdf.y = pdf.y + y_coordinate
-    Muscle_label_table = [[str(Muscle_name)],
-                           ['L = ' + str(Left_strength) + 'kg'],
-                           ['R = ' + str(Right_strength) + 'kg']
+    print(pdf.y)
+    pdf.x = x_coordinate
+    pdf.y = y_coordinate
+    Muscle_label_table = [str(Muscle_name),
+                           'L = ' + str(Left_strength) + 'kg',
+                           'R = ' + str(Right_strength) + 'kg'
                            ]
     for row in Muscle_label_table:
-        for datum in row:
+        pdf.cell(width / 8, 1.5 * 14, str(row), border=0, align='L')
+        #for datum in row:
             # Enter data in colums
             # Notice the use of the function str to coerce any input to the
             # string type. This is needed
             # since pyFPDF expects a string, not a number.
-            pdf.cell(width / 8, 1.5 * 14, str(datum), border=0, align='L')
-            print(pdf.x)
+            #pdf.cell(width / 8, 1.5 * 14, str(datum), border=0, align='L')
+            # print(pdf.x)
         pdf.ln(th)
-        pdf.x = pdf.x + x_coordinate
-#Insert the excel with all the info
+        pdf.x = x_coordinate
 
-df = pd.read_excel (r'D:\Stavros & Stylian Corporation\Μετρησείς\Mylonas_Vasilis.xlsx')
-#print(df)
-#print(df.columns)
-#print(df[1][1])
 
+# Insert the excel with all the info
+
+df = pd.read_excel(r'D:\Stavros & Stylian Corporation\Μετρησείς\Mylonas_Vasilis.xlsx')
 
 width = 210
 height = 297
@@ -95,11 +111,9 @@ height = 297
 pdf = FPDF()
 pdf.add_page()
 
-
 pdf.set_font('Arial', 'B', 26)
 pdf.cell(0, 15, 'Athletic Repsort', 1,1,'C')
 pdf.cell(0, 5, '', 0,1,'C')
-
 
 pdf.set_font('Arial', '', 16)
 
@@ -109,6 +123,7 @@ Charactiristics_table = [['Name', ':', str(df[2][0]), '', 'Age', ':', str(df[2][
                 ['Height', ':', str(df[2][3]), '', 'Injury', '=>', ''],
                 ['Weight', ':', str(df[2][4]), '', str(df[2][8]), '', '']
                 ]
+
 pdf.set_font('Arial', '', 14)
 list_for_alingnment_in_charactiristics_table = ['L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L',]
 th = pdf.font_size
@@ -124,42 +139,34 @@ for row in Charactiristics_table:
 
 pdf.cell(0, 5, '', 0,1,'C')
 pdf.cell(0, 5, '', 0,1,'C')
-#Start the writting of Force and RoM
-pdf.set_font('Arial', 'BUI', 18)
-pdf.cell(0, 15, 'Force and Range of Motion', 0,1,'L')
-#pdf.cell(0, 5, '', 0,1,'C')
 
+#Start the writting of Force
+pdf.set_font('Arial', 'BUI', 18)
+pdf.cell(0, 15, 'Force Tests', 0,1,'L')
 
 #Call Spider_plot for the hip
+# R/L = [δεξια, πανω, αριστερα, κατω ]
+# R/L = [Hip Abd, Hip Ex, Hip Add, Hip Fl]
+R = [df[3][15], df[3][13], df[3][16],df[3][14]]
+L = [df[2][15], df[2][13], df[2][16],df[2][14]]
 
-# R/L = Hip Ex, Hip Fl, Hip Abd, Hip Add]
-R = [df[3][12], df[3][13], df[3][14], df[3][15]]
-L = [df[2][12], df[2][13], df[2][14], df[2][15]]
-#R = [20, 30, 12, 14]
-#L = [22, 27, 14, 14]
 R_perc = [r/(l+r)*100 for r,l in zip(R,L)]
 L_perc = [l/(l+r)*100 for r,l in zip(R,L)]
 Data_to_annotate_L= L
 Data_to_annotate_R= R
 Spider_plot(L_perc,R_perc,Data_to_annotate_L,Data_to_annotate_R,4,'Hip')
 
-
-#print(pdf.x)
-#print(pdf.y)
-#save the y, x so that you can use it after to place the other diagrams
 save_x = pdf.x
 save_y = pdf.y
 
-pdf.image("plot_Hip.png",x = pdf.x -26, y = pdf.y,  w = 90, h = 67.5, type = 'PNG', link = '')
+pdf.image("plot_Hip_after_resizing.png",x = pdf.x , y = pdf.y,  w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
-
-
-
 
 #Call Spider_plot for the knee
 #R/L = [Knee Ex, Knee Fl, Knee Fl/ Knee Ex]
-R = [df[3][10], df[3][11], df[3][11]/df[3][10]]
-L = [df[2][10], df[2][11], df[2][11]/df[2][10]]
+R = [round(df[3][12],2), df[3][10], df[3][11]]
+L = [round(df[2][12],2), df[2][10], df[2][11]]
+
 R_perc = [r/(l+r)*100 for r,l in zip(R,L)]
 L_perc = [l/(l+r)*100 for r,l in zip(R,L)]
 Data_to_annotate_L= L
@@ -167,58 +174,113 @@ Data_to_annotate_R= R
 Spider_plot(L_perc,R_perc,Data_to_annotate_L,Data_to_annotate_R,3,'Knee')
 
 pdf.y = save_y
-#print(pdf.y)
 pdf.x = save_x + 80
 
-pdf.image("plot_Knee.png",x = pdf.x -32, y = pdf.y,  w = 90, h = 67.5, type = 'PNG', link = '')
+pdf.image("plot_Knee_after_resizing.png",x = pdf.x -13, y = pdf.y,  w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
 
-
-
-#save the y, x so that you can use it after to place the other diagrams
-
-
-#print(pdf.x)
-#print(pdf.y)
 #Call Spider_plot for the ankle
-#R/L = [Ankle D, nkle P, Ankle In, Ankle Ev]
-R = [df[3][16], df[3][17], df[3][18], df[3][19]]
-L = [df[2][16], df[2][17], df[2][18], df[2][19]]
+#R/L = [Ankle P, Ankle D, Ankle In, Ankle Ev]
+R = [df[3][20], df[3][18], df[3][19], df[3][17]]
+L = [df[2][20], df[2][18], df[2][19], df[2][17]]
+
 R_perc = [r/(l+r)*100 for r,l in zip(R,L)]
 L_perc = [l/(l+r)*100 for r,l in zip(R,L)]
 Data_to_annotate_L= L
 Data_to_annotate_R= R
 Spider_plot(L_perc,R_perc,Data_to_annotate_L,Data_to_annotate_R,4,'Ankle')
 
-
-#print(pdf.y)
 pdf.x = save_x + 160
 pdf.y = save_y
-pdf.image("plot_Ankle.png",x = pdf.x -38, y = pdf.y , w = 90, h = 67.5, type = 'PNG', link = '')
+pdf.image("plot_Ankle_after_resizing.png",x = pdf.x -25, y = pdf.y , w = 55, h = 62.5, type = 'PNG', link = '')
 pdf.set_font('Arial', '', 10)
+pdf.cell(0, 5, '', 0,1,'C')
+#Write spider plots labels
+#Muscle_labels(x_coordinate,y_coordinate,Muscle_name,Left_strength,Right_strength)
+#Hip Labels
+pdf.x = 1
+pdf.y = 101
 
+pdfx3 = pdf.x
+pdfy3 = pdf.y
+
+#Hip Extension
+pdf.x = pdfx3
+pdf.y = pdfy3
+Muscle_labels(pdf.x + 30 ,pdf.y - 12,'Extension',df[2][13],df[3][13])
+#Hip Flexion
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 30,pdf.y + 43,'Flexion',df[2][14],df[3][14])
+#Hip Adduction
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x,pdf.y + 15,'Adduction',df[2][16],df[3][16])
+
+#Hip Abduction
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 62,pdf.y + 15,'Abduction',df[2][15],df[3][15])
+#Knee Extension
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 83,pdf.y - 10,'Extension',df[2][10],df[3][10])
+#Knee Flexion
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 83,pdf.y + 40 ,'Flexion',df[2][11],df[3][11])
+
+#Knee Fl/Ex
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 128,pdf.y + 8 ,'Fl/Ex',round(df[2][12],2),round(df[3][12],2))
+
+#Ankle Plantar Fl
+pdf.x = pdfx3
+pdf.y = pdfy3
+Muscle_labels(pdf.x + 165 ,pdf.y - 12,'Plantar Fl',df[2][18],df[3][18])
+
+#Ankle Dorsi Fl
+pdf.x = pdfx3
+pdf.y = pdfy3
+Muscle_labels(pdf.x + 165 ,pdf.y + 43,'Dorsi Fl',df[2][17],df[3][17])
+
+#Ankle Inversion
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 135,pdf.y + 17 ,'Inversion',df[2][19],df[3][19])
+
+#Ankle Eversion
+pdf.y = pdfy3
+pdf.x = pdfx3
+Muscle_labels(pdf.x + 196,pdf.y + 15,'Eversion',df[2][20],df[3][20])
+
+
+#Start writing the Jumps and YoYo Test
 pdf.x = save_x
-#print(pdf.y)
-#print(pdf.x)
-
 pdf.y = save_y + 65
-# Start the writting of jumps and Yoyo test
 
 pdf.set_font('Arial', 'BUI', 18)
 pdf.cell(0, 15, 'Jumps and YoYo test', 0,1,'L')
 pdf.cell(0, 5, '', 0,1,'C')
 
 pdf.set_font('Arial', '', 16)
-Jumps_table = [['Elastic index','',':',  '10'],
+#Elastic_index = ((CMJ - SJ)/SJ)*100
+#Use_of_arms_index = ((CMJ_with_hands - CMJ)/CMJ)*100
+#Reflective_power_index = ((TF - TC)/TC)*100
+Elastic_index = round(((df[2][22] - df[2][21])/df[2][21])*100,2)
+Use_of_arms_index = round(((df[2][23] - df[2][22])/df[2][22])*100,2)
+Reflective_power_index = round(((df[2][25] - df[2][26])/df[2][26])*100,2)
+Jumps_table = [['Elastic index','',':\t\t\t\t\t\t' + str(Elastic_index)],
         ['', '','','', ''],
-        ['Use of arms','',':', '10'],
+        ['Use of arms','',':\t\t\t\t\t\t' + str(Use_of_arms_index)],
         ['', '', ''],
-        ['Reflective Power index','',':', '10'],
+        ['Reflective Power index','',':\t\t\t\t\t\t' + str(Reflective_power_index)],
         ['', '', ''],
-        ['YoYo test score', '',':','14']
+        ['YoYo test score', '',':\t\t\t\t\t\t' + str(df[2][27])]
         ]
+
 save_y = pdf.y
-#print(pdf.y)
 th = pdf.font_size
 
 for row in Jumps_table:
@@ -230,16 +292,13 @@ for row in Jumps_table:
         pdf.cell(width/7,th, str(datu), border=0)
     pdf.ln(1.5*th)
 
-#print(pdf.x)
-#print(pdf.y)
 save_y_2 = pdf.y
 pdf.y = save_y
-#print(pdf.y)
 save_x_2 = pdf.x
 pdf.x = pdf.x +100
 
-data = {'Squat Jump': 20, 'Counter-Movement\nJump        ': 25, 'Counter-Movement\nJump with Hands': 30,
-        'Drop Jump': 22}
+data = {'Squat Jump': df[2][21], 'Counter-Movement\nJump        ': df[2][22], 'Counter-Movement\nJump with Hands': df[2][23],
+        'Drop Jump': df[2][24]}
 courses = list(data.keys())
 values = list(data.values())
 
@@ -262,9 +321,8 @@ plt.savefig("plot.png")
 
 pdf.image("plot.png",x = pdf.x , y = pdf.y, w = 100, h = 60, type = 'PNG', link = '')
 
-#print(pdf.y)
-#print(pdf.x)
 pdf.cell(0, 5, '', 0,1,'C')
+
 #Physical Observation
 
 pdf.y = save_y_2
@@ -274,36 +332,6 @@ pdf.set_font('Arial', 'BUI', 18)
 pdf.cell(0, 15, 'Physical Observation', 0,1,'L')
 pdf.cell(0, 5, '', 0,1,'C')
 
-#writing of the labels of the muscles in the circled boxplots
-# pdf.x = pdf.x + 10
-# pdf.y = pdf.y - 175
-# L_hip_ext = 10
-# R_hip_ext = 12
-# Hip_Extension_table = [['Hip Extension'],
-#                 ['L = ' + str(L_hip_ext) + 'kg'],
-#                 ['R = ' + str(R_hip_ext) + 'kg']
-#                 ]
-# pdf.set_font('Arial', '', 8)
-# #list_for_alingnment_in_charactiristics_table = ['L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L','L','C','L','L','L','C','L',]
-# th = pdf.font_size
-#
-# for row in Hip_Extension_table:
-#     for datum in row:
-#         # Enter data in colums
-#         # Notice the use of the function str to coerce any input to the
-#         # string type. This is needed
-#         # since pyFPDF expects a string, not a number.
-#         pdf.cell(width/8,1.5 * 14, str(datum), border= 0, align = 'L')
-#     pdf.ln(th)
-#     pdf.x = pdf.x + 10
-#print('ok')
-pdfy3 = pdf.y
-pdfx3 = pdf.x
-#Muscle_labels(x_coordinate,y_coordinate,Muscle_name,Left_strength,Right_strength)
-Muscle_labels(12,-166,'Extension',df[2][12],df[3][12])
-pdf.y = pdfy3
-pdf.x = pdfx3
-Muscle_labels(75,-165,'Extension',df[2][10],df[3][10])
 
 
 
@@ -325,8 +353,6 @@ Muscle_labels(75,-165,'Extension',df[2][10],df[3][10])
 
 
 
-pdf.output('Report_2.pdf', 'F')
-webbrowser.open_new('Report_2.pdf')
 
 
 
@@ -336,46 +362,5 @@ webbrowser.open_new('Report_2.pdf')
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+pdf.output('Report_5.pdf', 'F')
+webbrowser.open_new('Report_5.pdf')
