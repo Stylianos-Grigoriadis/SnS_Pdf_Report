@@ -331,8 +331,10 @@ pdf.x = save_x_2
 pdf.set_font('Arial', 'BUI', 18)
 pdf.cell(0, 15, 'Physical Observation', 0,1,'L')
 pdf.cell(0, 5, '', 0,1,'C')
-
-
+pdf.set_line_width(1.5)
+with pdf.local_context(fill_opacity=0.25):
+    # Insert an image:
+    pdf.image("D:\Stavros & Stylian Corporation\Report\photos\ootballpitch2.png", x=0, y=0, w=width, h=height)
 
 
 
